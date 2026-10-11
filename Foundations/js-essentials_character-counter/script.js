@@ -1,4 +1,5 @@
-// Text analysis
+// ---Text analysis---
+
 const WORDS_PER_MINUTE = 200;
 const DENSITY_PREVIEW = 5;
 const LIMIT_WARNING_RATIO = 0.9; // heads-up once 90% of the limit is used
@@ -17,7 +18,7 @@ function readingTime(words) {
   return `${minutes} minute${minutes > 1 ? "s" : ""}`;
 }
 
-/** Letter frequencies, most common first, as { letter, count, percent }. */
+// Letter frequencies, most common first, as { letter, count, percent }. //
 function letterDensity(text) {
   const letters = text.toUpperCase().match(/\p{L}/gu) ?? [];
   const counts = new Map();
@@ -28,7 +29,7 @@ function letterDensity(text) {
     .sort((a, b) => b.count - a.count || a.letter.localeCompare(b.letter));
 }
 
-// DOM
+// ---DOM---
 
 const byId = (id) => document.getElementById(id);
 const THEME_KEY = "character-counter:theme"; // also read by the inline script in <head>
@@ -51,7 +52,7 @@ const densityList = byId("density-list");
 const densityToggle = byId("density-toggle");
 const densityRow = byId("density-row");
 
-// Render — the DOM holds the state, so every change simply re-renders
+// ---Render. the DOM holds the state, so every change simply re-renders---
 
 function render() {
   const text = textarea.value;
@@ -110,7 +111,7 @@ function createDensityRow({ letter, count, percent }) {
   return row;
 }
 
-// Events
+// ---Events---
 
 // One listener covers typing, both checkboxes and the limit field
 document.querySelector(".analyzer").addEventListener("input", render);
