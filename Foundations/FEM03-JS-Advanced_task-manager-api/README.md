@@ -22,6 +22,7 @@ src/
 ├── logger.js         # leveled logger (DEBUG=1 for debug output)
 ├── TaskManager.js    # controller orchestrating all operations
 ├── cli.js            # interactive menu and formatted output
+├── formatters.js     # pure output formatting (tables, progress bars, colors)
 └── main.js           # entry point
 test/                 # node:test unit tests
 ```
