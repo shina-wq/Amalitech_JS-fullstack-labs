@@ -18,6 +18,8 @@ src/
 ├── models.js         # Task, PriorityTask, User
 ├── taskProcessor.js  # filtering, statistics, grouping, search, sorting
 ├── cache.js          # closure-based cache
+├── rateLimiter.js    # promise-based request spacing
+├── logger.js         # leveled logger (DEBUG=1 for debug output)
 ├── TaskManager.js    # controller orchestrating all operations
 ├── cli.js            # interactive menu and formatted output
 └── main.js           # entry point
