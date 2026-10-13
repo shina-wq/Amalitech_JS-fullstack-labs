@@ -44,6 +44,12 @@ describe('PriorityTask', () => {
     assert.equal(task.toggle().getStatus(NOW), 'completed');
   });
 
+  test('a task due today is not overdue until the day ends', () => {
+    const task = new PriorityTask({ ...raw, priority: 'low', dueDate: '2026-01-15T00:00:00Z' });
+    assert.equal(task.getStatus(NOW), 'pending');
+    assert.equal(task.getStatus(new Date('2026-01-16T00:00:00Z')), 'overdue');
+  });
+
   test('high-priority tasks due soon are urgent', () => {
     const task = new PriorityTask({ ...raw, priority: 'high', dueDate: NOW.getTime() + DAY_MS });
     assert.equal(task.getStatus(NOW), 'urgent');

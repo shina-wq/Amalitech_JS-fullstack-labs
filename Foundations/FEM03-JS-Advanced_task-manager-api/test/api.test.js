@@ -59,6 +59,13 @@ test('malformed JSON and non-list payloads throw parse errors', async () => {
   await assert.rejects(createClient().fetchUsers(), { type: 'parse' });
 });
 
+test('fetchTodosForUsers fetches each user concurrently and flattens results', async () => {
+  globalThis.fetch = async (url) => jsonResponse([{ url }]);
+  const todos = await createClient().fetchTodosForUsers(1, 2);
+
+  assert.deepEqual(todos.map(({ url }) => url.split('.com')[1]), ['/users/1/todos', '/users/2/todos']);
+});
+
 test('fetchUserTodos rejects invalid ids', async () => {
   await assert.rejects(createClient().fetchUserTodos('abc'), TypeError);
 });

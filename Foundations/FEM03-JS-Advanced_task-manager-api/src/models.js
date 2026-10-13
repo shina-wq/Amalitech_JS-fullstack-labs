@@ -82,8 +82,10 @@ export class PriorityTask extends Task {
     return new PriorityTask({ ...task, ...PriorityTask.derive(task, now) });
   }
 
+  // A task stays on time until the end of its due day (UTC)
   isOverdue(now = new Date()) {
-    return !this.completed && this.dueDate !== null && this.dueDate < now;
+    if (this.completed || !this.dueDate) return false;
+    return new Date(this.dueDate).setUTCHours(23, 59, 59, 999) < now;
   }
 
   isUrgent(now = new Date()) {

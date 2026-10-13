@@ -9,8 +9,10 @@ const { colors } = format;
 export class CLI {
   #manager;
   #rl;
+  #output;
   #userNames;
   #running = false;
+  #closed = false;
   #menu = [
     { key: '1', label: 'List all tasks', run: () => this.#listTasks() },
     { key: '2', label: 'Filter tasks', run: () => this.#filterTasks() },
@@ -26,9 +28,13 @@ export class CLI {
 
   constructor(manager, { input = stdin, output = stdout } = {}) {
     this.#manager = manager;
+    this.#output = output;
     this.#rl = createInterface({ input, output });
     this.#userNames = new Map(manager.users.map(({ id, name }) => [id, name]));
-    this.#rl.on('close', () => { this.#running = false; });
+    this.#rl.on('close', () => {
+      this.#closed = true;
+      this.#running = false;
+    });
   }
 
   async start() {
@@ -51,14 +57,13 @@ export class CLI {
   }
 
   stop() {
-    if (this.#rl.closed) return;
-    this.#running = false;
+    if (this.#closed) return;
     this.#print(colors.dim('Goodbye!'));
     this.#rl.close();
   }
 
   #print(...lines) {
-    this.#rl.output.write(`${lines.join('\n')}\n`);
+    this.#output.write(`${lines.join('\n')}\n`);
   }
 
   #renderMenu() {

@@ -3,10 +3,10 @@
 An ES6+ JavaScript client that fetches, processes and manages tasks from the [JSONPlaceholder](https://jsonplaceholder.typicode.com) API through an interactive CLI. Zero dependencies.
 
 ## Getting Started
-Requires Node.js 18+.
+Requires Node.js 20+.
 ```bash
 npm start   # interactive CLI
-npm test    # 44 unit tests (no network needed)
+npm test    # unit tests (no network needed)
 ```
 Set `DEBUG=1` to log requests, retries and cache hits.
 
