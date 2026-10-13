@@ -1,4 +1,5 @@
 export const PRIORITIES = ['low', 'medium', 'high'];
+export const STATUSES = ['pending', 'completed', 'overdue', 'urgent'];
 export const TAGS = ['work', 'personal', 'home', 'health', 'finance', 'learning'];
 
 const DAY_MS = 24 * 60 * 60 * 1000;
