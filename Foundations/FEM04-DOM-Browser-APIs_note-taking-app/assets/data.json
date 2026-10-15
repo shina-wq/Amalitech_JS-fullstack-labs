@@ -1,0 +1,92 @@
+[
+  {
+    "id": "seed-1",
+    "title": "React Performance Optimization",
+    "content": "Key performance optimization techniques:\n\n1. Code Splitting\n- Use React.lazy() for route-based splitting\n- Implement dynamic imports for heavy components\n\n2. Memoization\n- useMemo for expensive calculations\n- useCallback for function props\n- React.memo for component optimization\n\n3. Virtual List Implementation\n- Use react-window for long lists\n- Implement infinite scrolling\n\nTODO: Benchmark current application and identify bottlenecks",
+    "tags": ["Dev", "React"],
+    "archived": false,
+    "timestamp": "2024-10-29T10:15:00.000Z",
+    "location": null
+  },
+  {
+    "id": "seed-2",
+    "title": "Japan Travel Planning",
+    "content": "Itinerary ideas:\n\n- Tokyo: Shibuya, Asakusa, teamLab\n- Kyoto: Fushimi Inari, Arashiyama\n- Osaka: street food in Dotonbori\n\nTo do:\n- Buy JR Pass\n- Book ryokan in Kyoto\n- Check visa requirements",
+    "tags": ["Travel", "Personal"],
+    "archived": false,
+    "timestamp": "2024-10-28T16:40:00.000Z",
+    "location": null
+  },
+  {
+    "id": "seed-3",
+    "title": "Favorite Pasta Recipes",
+    "content": "1. Carbonara\n- Guanciale, eggs, pecorino, black pepper\n\n2. Aglio e Olio\n- Garlic, olive oil, chili flakes, parsley\n\n3. Pesto Genovese\n- Basil, pine nuts, parmesan, olive oil",
+    "tags": ["Cooking", "Recipes"],
+    "archived": false,
+    "timestamp": "2024-10-27T19:05:00.000Z",
+    "location": null
+  },
+  {
+    "id": "seed-4",
+    "title": "TypeScript Migration Guide",
+    "content": "Project migration steps:\n\n1. Initial Setup\n- Install TypeScript dependencies\n- Configure tsconfig.json\n- Set up build pipeline\n\n2. Migration Strategy\n- Start with newer modules\n- Add type definitions gradually\n- Use 'any' temporarily for complex cases\n\n3. Testing Approach\n- Update test configuration\n- Add type testing\n- Validate build process\n\nDeadline: End of Q4 2024",
+    "tags": ["Dev", "React", "TypeScript"],
+    "archived": true,
+    "timestamp": "2024-10-26T09:30:00.000Z",
+    "location": null
+  },
+  {
+    "id": "seed-5",
+    "title": "Weekly Workout Plan",
+    "content": "Monday: Upper body strength\nTuesday: 5km run\nWednesday: Rest\nThursday: Lower body strength\nFriday: HIIT session\nWeekend: Long walk or hike",
+    "tags": ["Fitness", "Health"],
+    "archived": false,
+    "timestamp": "2024-10-25T07:00:00.000Z",
+    "location": null
+  },
+  {
+    "id": "seed-6",
+    "title": "Gift Ideas",
+    "content": "Mum: cookbook, plant\nDad: wireless earbuds\nSister: concert tickets\n\nBudget: keep under $200 total",
+    "tags": ["Personal", "Shopping"],
+    "archived": true,
+    "timestamp": "2024-10-20T13:20:00.000Z",
+    "location": null
+  },
+  {
+    "id": "seed-7",
+    "title": "React Component Library",
+    "content": "Components to build:\n\n- Button (primary, secondary, border)\n- Text input with hint and error states\n- Modal\n- Toast\n\nDocument each with usage examples.",
+    "tags": ["Dev", "React"],
+    "archived": true,
+    "timestamp": "2024-10-15T11:45:00.000Z",
+    "location": null
+  },
+  {
+    "id": "seed-8",
+    "title": "Meal Prep Ideas",
+    "content": "Sunday prep:\n\n- Grilled chicken and roasted vegetables\n- Quinoa salad with chickpeas\n- Overnight oats for breakfast\n\nStore in glass containers, keeps for 4 days.",
+    "tags": ["Cooking", "Health", "Recipes"],
+    "archived": false,
+    "timestamp": "2024-10-12T17:10:00.000Z",
+    "location": null
+  },
+  {
+    "id": "seed-9",
+    "title": "Reading List",
+    "content": "Currently reading:\n- Eloquent JavaScript\n\nUp next:\n- Clean Code\n- The Pragmatic Programmer\n- Atomic Habits",
+    "tags": ["Personal", "Dev"],
+    "archived": false,
+    "timestamp": "2024-10-05T21:00:00.000Z",
+    "location": null
+  },
+  {
+    "id": "seed-10",
+    "title": "Fitness Goals 2025",
+    "content": "Goals:\n\n- Run a half marathon\n- Deadlift 1.5x body weight\n- Stretch 10 minutes daily\n- Sleep 7+ hours consistently",
+    "tags": ["Fitness", "Health", "Personal"],
+    "archived": false,
+    "timestamp": "2024-09-22T08:30:00.000Z",
+    "location": null
+  }
+]
