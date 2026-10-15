@@ -14,5 +14,321 @@
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
+  <div class="app" data-view="all">
+
+    <!-- Mobile/tablet top bar -->
+    <div class="mobile-logo">
+      <svg class="logo" viewBox="0 0 95 28" role="img" aria-label="Notes"><use href="assets/images/logo.svg#logo"></use></svg>
+    </div>
+
+    <!-- Sidebar: main navigation + tags -->
+    <aside class="sidebar">
+      <svg class="logo" viewBox="0 0 95 28" role="img" aria-label="Notes"><use href="assets/images/logo.svg#logo"></use></svg>
+
+      <nav aria-label="Notes">
+        <ul class="nav-list">
+          <li>
+            <button class="nav-link" data-view="all" aria-current="page">
+              <span class="icon icon-home" aria-hidden="true"></span>
+              All Notes
+              <span class="icon icon-chevron-right nav-chevron" aria-hidden="true"></span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-view="archived">
+              <span class="icon icon-archive" aria-hidden="true"></span>
+              Archived Notes
+              <span class="icon icon-chevron-right nav-chevron" aria-hidden="true"></span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <section class="tags-section" aria-labelledby="tags-heading">
+        <h2 id="tags-heading" class="tags-heading">Tags</h2>
+        <ul class="nav-list" id="tag-list"></ul>
+      </section>
+    </aside>
+
+    <!-- Page header: title, search, settings -->
+    <header class="page-header">
+      <h1 class="page-title" id="page-title">All Notes</h1>
+
+      <form class="search" role="search" id="search-form">
+        <label for="search-input" class="visually-hidden">Search notes</label>
+        <span class="icon icon-search" aria-hidden="true"></span>
+        <input type="search" id="search-input" class="search-input" placeholder="Search by title, content, or tags…" autocomplete="off">
+      </form>
+
+      <button class="icon-btn settings-btn" data-view="settings" aria-label="Settings">
+        <span class="icon icon-settings" aria-hidden="true"></span>
+      </button>
+    </header>
+
+    <main class="main">
+
+      <!-- Notes list -->
+      <section class="notes-panel" aria-label="Notes list">
+        <button class="btn btn-primary create-btn" data-action="create">+ Create New Note</button>
+        <p class="list-description" id="list-description" hidden></p>
+        <p class="empty-state" id="empty-state" hidden></p>
+        <ul class="note-list" id="note-list"></ul>
+      </section>
+
+      <!-- Note editor -->
+      <section class="note-detail" id="note-detail" aria-label="Note editor" hidden>
+        <form class="note-form" id="note-form" novalidate>
+
+          <!-- Mobile/tablet toolbar -->
+          <div class="note-toolbar">
+            <button type="button" class="text-btn back-btn" data-action="back">
+              <span class="icon icon-arrow-left" aria-hidden="true"></span>
+              Go Back
+            </button>
+            <div class="note-toolbar-actions">
+              <button type="button" class="icon-btn" data-action="delete" aria-label="Delete note">
+                <span class="icon icon-delete" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="icon-btn" data-action="archive" aria-label="Archive note">
+                <span class="icon icon-archive" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="icon-btn" data-action="restore" aria-label="Restore note" hidden>
+                <span class="icon icon-restore" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="text-btn" data-action="cancel">Cancel</button>
+              <button type="submit" class="text-btn text-btn-accent">Save Note</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="note-title" class="visually-hidden">Title</label>
+            <input type="text" id="note-title" class="note-title-input" name="title" placeholder="Enter a title…" required aria-describedby="title-error">
+            <p class="field-error" id="title-error" hidden></p>
+          </div>
+
+          <div class="note-meta">
+            <div class="meta-row">
+              <label for="note-tags" class="meta-label">
+                <span class="icon icon-tag" aria-hidden="true"></span>
+                Tags
+              </label>
+              <input type="text" id="note-tags" class="meta-input" name="tags" placeholder="Add tags separated by commas (e.g. Work, Planning)">
+            </div>
+            <div class="meta-row" id="status-row" hidden>
+              <span class="meta-label">
+                <span class="icon icon-status" aria-hidden="true"></span>
+                Status
+              </span>
+              <span class="meta-value">Archived</span>
+            </div>
+            <div class="meta-row" id="location-row" hidden>
+              <span class="meta-label">
+                <span class="icon icon-location" aria-hidden="true"></span>
+                Location
+              </span>
+              <span class="meta-value" id="note-location"></span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">
+                <span class="icon icon-clock" aria-hidden="true"></span>
+                Last edited
+              </span>
+              <span class="meta-value" id="note-date">Not yet saved</span>
+            </div>
+          </div>
+
+          <label for="note-content" class="visually-hidden">Note content</label>
+          <textarea id="note-content" class="note-content" name="content" placeholder="Start typing your note here…"></textarea>
+
+          <div class="note-form-footer">
+            <button type="submit" class="btn btn-primary">Save Note</button>
+            <button type="button" class="btn btn-secondary" data-action="cancel">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Note actions (desktop) -->
+      <aside class="note-actions" id="note-actions" aria-label="Note actions" hidden>
+        <button class="btn btn-border" data-action="archive">
+          <span class="icon icon-archive" aria-hidden="true"></span>
+          Archive Note
+        </button>
+        <button class="btn btn-border" data-action="restore" hidden>
+          <span class="icon icon-restore" aria-hidden="true"></span>
+          Restore Note
+        </button>
+        <button class="btn btn-border" data-action="delete">
+          <span class="icon icon-delete" aria-hidden="true"></span>
+          Delete Note
+        </button>
+      </aside>
+
+      <!-- Settings -->
+      <section class="settings" id="settings" aria-label="Settings" hidden>
+        <nav class="settings-menu" aria-label="Settings">
+          <ul class="nav-list">
+            <li>
+              <button class="nav-link" data-setting="color" aria-current="page">
+                <span class="icon icon-sun" aria-hidden="true"></span>
+                Color Theme
+                <span class="icon icon-chevron-right nav-chevron" aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-link" data-setting="font">
+                <span class="icon icon-font" aria-hidden="true"></span>
+                Font Theme
+                <span class="icon icon-chevron-right nav-chevron" aria-hidden="true"></span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+
+        <form class="settings-panel" id="color-form" data-setting-panel="color">
+          <button type="button" class="text-btn back-btn" data-action="settings-back">
+            <span class="icon icon-arrow-left" aria-hidden="true"></span>
+            Settings
+          </button>
+          <fieldset>
+            <legend class="settings-title">Color Theme</legend>
+            <p class="settings-subtitle">Choose your color theme:</p>
+            <div class="option-list">
+              <label class="option">
+                <span class="option-icon"><span class="icon icon-sun" aria-hidden="true"></span></span>
+                <span class="option-text">
+                  <span class="option-name">Light Mode</span>
+                  <span class="option-desc">Pick a clean and classic light theme</span>
+                </span>
+                <input type="radio" name="theme" value="light">
+              </label>
+              <label class="option">
+                <span class="option-icon"><span class="icon icon-dark-mode" aria-hidden="true"></span></span>
+                <span class="option-text">
+                  <span class="option-name">Dark Mode</span>
+                  <span class="option-desc">Select a sleek and modern dark theme</span>
+                </span>
+                <input type="radio" name="theme" value="dark">
+              </label>
+              <label class="option">
+                <span class="option-icon"><span class="icon icon-system-theme" aria-hidden="true"></span></span>
+                <span class="option-text">
+                  <span class="option-name">System</span>
+                  <span class="option-desc">Adapts to your device’s theme</span>
+                </span>
+                <input type="radio" name="theme" value="system">
+              </label>
+            </div>
+          </fieldset>
+          <button type="submit" class="btn btn-primary apply-btn">Apply Changes</button>
+        </form>
+
+        <form class="settings-panel" id="font-form" data-setting-panel="font" hidden>
+          <button type="button" class="text-btn back-btn" data-action="settings-back">
+            <span class="icon icon-arrow-left" aria-hidden="true"></span>
+            Settings
+          </button>
+          <fieldset>
+            <legend class="settings-title">Font Theme</legend>
+            <p class="settings-subtitle">Choose your font theme:</p>
+            <div class="option-list">
+              <label class="option">
+                <span class="option-icon"><span class="icon icon-font-sans-serif" aria-hidden="true"></span></span>
+                <span class="option-text">
+                  <span class="option-name">Sans-serif</span>
+                  <span class="option-desc">Clean and modern, easy to read.</span>
+                </span>
+                <input type="radio" name="font" value="sans">
+              </label>
+              <label class="option">
+                <span class="option-icon"><span class="icon icon-font-serif" aria-hidden="true"></span></span>
+                <span class="option-text">
+                  <span class="option-name">Serif</span>
+                  <span class="option-desc">Classic and elegant for a timeless feel.</span>
+                </span>
+                <input type="radio" name="font" value="serif">
+              </label>
+              <label class="option">
+                <span class="option-icon"><span class="icon icon-font-monospace" aria-hidden="true"></span></span>
+                <span class="option-text">
+                  <span class="option-name">Monospace</span>
+                  <span class="option-desc">Code-like, great for a technical vibe.</span>
+                </span>
+                <input type="radio" name="font" value="mono">
+              </label>
+            </div>
+          </fieldset>
+          <button type="submit" class="btn btn-primary apply-btn">Apply Changes</button>
+        </form>
+      </section>
+    </main>
+
+    <!-- Mobile/tablet create button -->
+    <button class="fab" data-action="create" aria-label="Create new note">
+      <span class="icon icon-plus" aria-hidden="true"></span>
+    </button>
+
+    <!-- Mobile/tablet bottom navigation -->
+    <nav class="bottom-nav" aria-label="Main">
+      <ul>
+        <li><button class="bottom-nav-link" data-view="all" aria-current="page"><span class="icon icon-home" aria-hidden="true"></span><span class="bottom-nav-label">Home</span></button></li>
+        <li><button class="bottom-nav-link" data-view="search"><span class="icon icon-search" aria-hidden="true"></span><span class="bottom-nav-label">Search</span></button></li>
+        <li><button class="bottom-nav-link" data-view="archived"><span class="icon icon-archive" aria-hidden="true"></span><span class="bottom-nav-label">Archived</span></button></li>
+        <li><button class="bottom-nav-link" data-view="tags"><span class="icon icon-tag" aria-hidden="true"></span><span class="bottom-nav-label">Tags</span></button></li>
+        <li><button class="bottom-nav-link" data-view="settings"><span class="icon icon-settings" aria-hidden="true"></span><span class="bottom-nav-label">Settings</span></button></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Confirm modal (archive / delete) -->
+  <dialog class="modal" id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <form method="dialog">
+      <div class="modal-body">
+        <span class="modal-icon"><span class="icon" id="confirm-icon" aria-hidden="true"></span></span>
+        <div>
+          <h2 class="modal-title" id="confirm-title"></h2>
+          <p class="modal-message" id="confirm-message"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" value="cancel">Cancel</button>
+        <button class="btn" id="confirm-btn" value="confirm"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Toasts -->
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+
+  <!-- Templates -->
+  <template id="note-item-template">
+    <li>
+      <button class="note-item" data-id="">
+        <span class="note-item-title"></span>
+        <span class="tag-chips"></span>
+        <time class="note-item-date"></time>
+      </button>
+    </li>
+  </template>
+
+  <template id="tag-item-template">
+    <li>
+      <button class="nav-link" data-tag="">
+        <span class="icon icon-tag" aria-hidden="true"></span>
+        <span class="tag-name"></span>
+        <span class="icon icon-chevron-right nav-chevron" aria-hidden="true"></span>
+      </button>
+    </li>
+  </template>
+
+  <template id="toast-template">
+    <div class="toast">
+      <span class="icon icon-checkmark toast-icon" aria-hidden="true"></span>
+      <p class="toast-message"></p>
+      <button class="toast-link text-btn" data-view="all" hidden></button>
+      <button class="icon-btn toast-close" aria-label="Dismiss notification">
+        <span class="icon icon-cross" aria-hidden="true"></span>
+      </button>
+    </div>
+  </template>
 </body>
 </html>
