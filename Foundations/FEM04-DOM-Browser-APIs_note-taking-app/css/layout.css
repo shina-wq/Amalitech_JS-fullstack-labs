@@ -1,0 +1,325 @@
+/*
+  View state lives on .app:
+  - data-view: all | archived | tag | search | tags | settings
+  - .is-detail: a note or settings panel is open (mobile/tablet only)
+*/
+
+/* All sizes */
+.notes-panel,
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.notes-panel {
+  gap: var(--space-200);
+}
+
+.settings-panel {
+  gap: var(--space-300);
+}
+
+.apply-btn {
+  align-self: flex-end;
+}
+
+.toast-region {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+}
+
+.app:not([data-view="settings"]) .settings,
+.app[data-view="settings"] :is(.notes-panel, .note-detail, .note-actions) {
+  display: none;
+}
+
+/* Mobile & tablet */
+@media (width < 64rem) {
+  :root {
+    --nav-height: 3.5rem;
+    --gutter: var(--space-200);
+    --card-radius: var(--radius-8);
+  }
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    padding-bottom: var(--nav-height);
+    background-color: var(--color-bg-subtle);
+  }
+
+  .mobile-logo {
+    padding: var(--space-150) var(--gutter);
+  }
+
+  .sidebar,
+  .page-header :is(.search, .settings-btn),
+  .create-btn,
+  .note-actions,
+  .note-form-footer {
+    display: none;
+  }
+
+  /* White content card below the logo */
+  .page-header,
+  .main,
+  .app[data-view="tags"] .sidebar {
+    background-color: var(--color-bg);
+    padding-inline: var(--gutter);
+  }
+
+  .page-header,
+  .app.is-detail .main,
+  .app[data-view="tags"] .sidebar {
+    border-radius: var(--card-radius) var(--card-radius) 0 0;
+  }
+
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-200);
+    padding-top: var(--space-250);
+  }
+
+  .main {
+    flex: 1;
+    padding-block: var(--space-200) var(--space-250);
+  }
+
+  .app[data-view="search"] .page-header .search {
+    display: flex;
+  }
+
+  /* Tags view: the sidebar's tag list becomes the page */
+  .app[data-view="tags"] :is(.page-header, .main),
+  .app[data-view="tags"] .sidebar > :not(.tags-section) {
+    display: none;
+  }
+
+  .app[data-view="tags"] .sidebar {
+    display: block;
+    flex: 1;
+    padding-block: var(--space-250);
+  }
+
+  .app[data-view="tags"] .tags-heading {
+    margin-bottom: var(--space-200);
+    padding: 0;
+    color: var(--color-text);
+    font: var(--text-1);
+    letter-spacing: var(--tracking-1);
+  }
+
+  /* Detail screens (open note / settings panel) replace the list */
+  .app:not(.is-detail) :is(.note-detail, .settings-panel),
+  .app.is-detail :is(.page-header, .notes-panel, .settings-menu) {
+    display: none;
+  }
+
+  .app.is-detail .main {
+    padding-top: var(--space-150);
+  }
+
+  /* Let the editor fill the remaining height */
+  .main,
+  .note-detail {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .note-detail,
+  .note-form {
+    flex: 1;
+  }
+
+  .fab {
+    position: fixed;
+    right: var(--gutter);
+    bottom: calc(var(--nav-height) + var(--gutter));
+  }
+
+  .app:is(.is-detail, [data-view="tags"], [data-view="settings"]) .fab {
+    display: none;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    inset: auto 0 0;
+    padding: var(--space-150) var(--gutter);
+    border-top: 1px solid var(--color-border);
+    background-color: var(--color-bg);
+    box-shadow: var(--shadow-nav);
+  }
+
+  .bottom-nav-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .toast-region {
+    right: var(--gutter);
+    bottom: calc(var(--nav-height) + var(--gutter));
+    left: var(--gutter);
+    align-items: center;
+  }
+}
+
+/* Tablet */
+@media (48rem <= width < 64rem) {
+  :root {
+    --nav-height: 4.625rem;
+    --gutter: var(--space-400);
+    --card-radius: var(--radius-12);
+  }
+
+  .mobile-logo {
+    padding-block: var(--space-200);
+  }
+
+  .page-header {
+    padding-top: var(--space-300);
+  }
+
+  .fab {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .bottom-nav-link {
+    width: 5rem;
+  }
+
+  .bottom-nav-label {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+  }
+
+  .bottom-nav li + li {
+    padding-left: var(--space-200);
+    border-left: 1px solid var(--color-bg-subtle);
+  }
+}
+
+/* Desktop */
+@media (width >= 64rem) {
+  .app {
+    display: grid;
+    grid-template:
+      "sidebar header" auto
+      "sidebar main" 1fr
+      / 17rem 1fr;
+    height: 100dvh;
+  }
+
+  .mobile-logo,
+  .bottom-nav,
+  .fab,
+  .note-toolbar,
+  .settings-panel .back-btn {
+    display: none;
+  }
+
+  .sidebar {
+    grid-area: sidebar;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-200);
+    padding: var(--space-150) var(--space-200);
+    border-right: 1px solid var(--color-border);
+    overflow-y: auto;
+  }
+
+  .sidebar > .logo {
+    margin-block: var(--space-150);
+  }
+
+  .sidebar nav {
+    padding-bottom: var(--space-100);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .tags-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-100);
+  }
+
+  .page-header {
+    grid-area: header;
+    display: flex;
+    align-items: center;
+    gap: var(--space-200);
+    min-height: 5.0625rem;
+    padding-inline: var(--space-400);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .page-header .search {
+    width: 18.75rem;
+    margin-left: auto;
+  }
+
+  .page-header .settings-btn {
+    width: 2.625rem;
+    height: 2.625rem;
+  }
+
+  .main {
+    grid-area: main;
+    display: grid;
+    grid-template-columns: 18.125rem 1fr 16.125rem;
+    min-height: 0;
+  }
+
+  .notes-panel {
+    padding: var(--space-250) var(--space-200) var(--space-250) var(--space-400);
+    border-right: 1px solid var(--color-border);
+    overflow-y: auto;
+  }
+
+  .note-detail {
+    grid-column: 2;
+    padding: var(--space-250) var(--space-300);
+    border-right: 1px solid var(--color-border);
+    overflow-y: auto;
+  }
+
+  .note-actions {
+    grid-column: 3;
+    padding: var(--space-250) var(--space-200);
+  }
+
+  .settings {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 16.125rem 1fr;
+    align-items: start;
+  }
+
+  .settings-menu {
+    height: 100%;
+    padding: var(--space-250) var(--space-200) var(--space-250) var(--space-400);
+    border-right: 1px solid var(--color-border);
+  }
+
+  .settings-panel {
+    max-width: 37rem;
+    padding: var(--space-400);
+  }
+
+  .toast-region {
+    right: var(--space-400);
+    bottom: var(--space-400);
+    align-items: flex-end;
+  }
+}
