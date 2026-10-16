@@ -114,6 +114,11 @@
   color: var(--color-text);
 }
 
+.text-btn:disabled {
+  color: var(--color-placeholder);
+  cursor: not-allowed;
+}
+
 .text-btn-accent {
   color: var(--color-accent);
 }
@@ -262,6 +267,16 @@
 .note-item-title {
   font: var(--text-3);
   letter-spacing: var(--tracking-3);
+}
+
+.note-item.is-archived .note-item-title {
+  color: var(--color-text-muted);
+}
+
+.note-item mark {
+  border-radius: var(--radius-4);
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent);
 }
 
 .tag-chips {
@@ -547,6 +562,10 @@
 
 .toast-icon {
   color: var(--color-success);
+}
+
+.toast-error .toast-icon {
+  color: var(--color-danger);
 }
 
 .toast-message {
