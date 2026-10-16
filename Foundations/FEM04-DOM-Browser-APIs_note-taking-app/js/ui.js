@@ -121,8 +121,6 @@ export const setView = (view, { tag = '', query = '' } = {}) => {
   const navView = view === 'tag' ? 'tags' : view;
   document.querySelectorAll('.nav-link[data-view], .bottom-nav-link').forEach((link) =>
     setCurrent(link, link.dataset.view === navView));
-  els.tagList.querySelectorAll('[data-tag]').forEach((link) =>
-    setCurrent(link, view === 'tag' && link.dataset.tag === tag));
 };
 
 export const toggleArchiveView = (showArchived) => setView(showArchived ? 'archived' : 'all');
