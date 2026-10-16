@@ -10,7 +10,7 @@ const titleInput = $('note-title');
 const searchInput = $('search-input');
 const noteDetail = $('note-detail');
 const dialog = $('confirm-dialog');
-const desktopQuery = matchMedia('(width >= 80rem)');
+const desktopQuery = matchMedia('(width >= 64rem)');
 const isDesktop = () => desktopQuery.matches;
 
 const state = {

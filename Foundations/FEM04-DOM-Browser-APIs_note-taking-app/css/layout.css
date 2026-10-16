@@ -36,7 +36,7 @@
 }
 
 /* Mobile & tablet */
-@media (width < 80rem) {
+@media (width < 64rem) {
   :root {
     --nav-height: 3.5rem;
     --gutter: var(--space-200);
@@ -172,7 +172,7 @@
 }
 
 /* Tablet */
-@media (48rem <= width < 80rem) {
+@media (48rem <= width < 64rem) {
   :root {
     --nav-height: 4.625rem;
     --gutter: var(--space-400);
@@ -211,13 +211,13 @@
 }
 
 /* Desktop */
-@media (width >= 80rem) {
+@media (width >= 64rem) {
   .app {
     display: grid;
     grid-template:
       "sidebar header" auto
       "sidebar main" 1fr
-      / 17rem 1fr;
+      / clamp(14rem, 19vw, 17rem) 1fr;
     height: 100dvh;
   }
 
@@ -277,7 +277,7 @@
   .main {
     grid-area: main;
     display: grid;
-    grid-template-columns: 18.125rem 1fr 16.125rem;
+    grid-template-columns: clamp(14rem, 20vw, 18.125rem) minmax(0, 1fr) clamp(11rem, 18vw, 16.125rem);
     min-height: 0;
   }
 
@@ -302,7 +302,7 @@
   .settings {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 16.125rem 1fr;
+    grid-template-columns: clamp(13rem, 18vw, 16.125rem) minmax(0, 1fr);
     align-items: start;
   }
 
