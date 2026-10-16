@@ -15,8 +15,8 @@ const els = {
   noteContent: $('note-content'),
   noteDate: $('note-date'),
   statusRow: $('status-row'),
-  locationRow: $('location-row'),
   noteLocation: $('note-location'),
+  locationBtn: $('location-btn'),
   toasts: $('toast-region'),
   dialog: $('confirm-dialog'),
 };
@@ -76,7 +76,7 @@ const cloneTemplate = (id) => $(id).content.firstElementChild.cloneNode(true);
 const setCurrent = (el, isCurrent) =>
   isCurrent ? el.setAttribute('aria-current', 'page') : el.removeAttribute('aria-current');
 
-export const formatDate = (timestamp) => {
+const formatDate = (timestamp) => {
   const date = new Date(timestamp);
   const month = date.toLocaleString('en-US', { month: 'short' });
   return `${String(date.getDate()).padStart(2, '0')} ${month} ${date.getFullYear()}`;
@@ -148,6 +148,10 @@ export const renderNote = (note, { selected = false, query = '' } = {}) => {
   const time = item.querySelector('time');
   time.dateTime = note.timestamp;
   time.textContent = formatDate(note.timestamp);
+
+  const location = item.querySelector('.note-item-location');
+  if (note.location) location.append(icon('location'), formatLocation(note.location));
+  else location.remove();
   return item;
 };
 
@@ -178,8 +182,8 @@ export const renderEditor = (note) => {
   els.noteContent.value = note?.content ?? '';
   els.noteDate.textContent = note ? formatDate(note.timestamp) : 'Not yet saved';
   els.statusRow.hidden = !note?.archived;
-  els.locationRow.hidden = !note?.location;
-  els.noteLocation.textContent = note?.location ? formatLocation(note.location) : '';
+  setLocation(note?.location);
+  setLocationBusy(false);
   clearValidationError(els.noteTitle);
 
   document.querySelectorAll('#note-detail [data-action], #note-actions [data-action]').forEach((button) => {
@@ -197,6 +201,17 @@ export const hideEditor = () => {
   els.detail.hidden = true;
   els.actions.hidden = true;
   els.form.dataset.id = '';
+};
+
+// Shows the location text, or the "Add location" button when there is none
+export const setLocation = (location) => {
+  els.noteLocation.textContent = location ? formatLocation(location) : '';
+  els.locationBtn.hidden = Boolean(location);
+};
+
+export const setLocationBusy = (busy) => {
+  els.locationBtn.disabled = busy;
+  els.locationBtn.textContent = busy ? 'Locating…' : 'Add location';
 };
 
 export const setSaveEnabled = (enabled) => {

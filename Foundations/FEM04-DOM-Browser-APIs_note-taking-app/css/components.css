@@ -293,10 +293,24 @@
   letter-spacing: var(--tracking-6);
 }
 
-.note-item-date {
+.note-item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-100);
   color: var(--color-text-muted);
   font: var(--text-6);
   letter-spacing: var(--tracking-6);
+}
+
+.note-item-location {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-025);
+}
+
+.note-item-location .icon {
+  width: 0.75rem;
+  height: 0.75rem;
 }
 
 /* Note editor */
@@ -318,7 +332,16 @@
 .note-toolbar-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-200);
+  gap: var(--space-150);
+}
+
+/* Touch-friendly targets */
+.note-toolbar :is(.icon-btn, .text-btn) {
+  min-height: 2.75rem;
+}
+
+.note-toolbar .icon-btn {
+  min-width: 2.75rem;
 }
 
 .note-title-input,
@@ -578,7 +601,27 @@
 }
 
 .toast-close {
+  min-width: 1.5rem;
+  min-height: 1.5rem;
   color: var(--color-placeholder);
+}
+
+/* Skip link: hidden until focused */
+.skip-link {
+  position: fixed;
+  top: var(--space-200);
+  left: var(--space-200);
+  z-index: 10;
+  padding: var(--space-150) var(--space-200);
+  border-radius: var(--radius-8);
+  background-color: var(--color-accent);
+  color: var(--white);
+  font: var(--text-4);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
 }
 
 /* Bottom navigation */

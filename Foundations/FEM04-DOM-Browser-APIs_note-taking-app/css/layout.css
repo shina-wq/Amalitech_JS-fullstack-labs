@@ -36,7 +36,7 @@
 }
 
 /* Mobile & tablet */
-@media (width < 64rem) {
+@media (width < 80rem) {
   :root {
     --nav-height: 3.5rem;
     --gutter: var(--space-200);
@@ -172,7 +172,7 @@
 }
 
 /* Tablet */
-@media (48rem <= width < 64rem) {
+@media (48rem <= width < 80rem) {
   :root {
     --nav-height: 4.625rem;
     --gutter: var(--space-400);
@@ -211,7 +211,7 @@
 }
 
 /* Desktop */
-@media (width >= 64rem) {
+@media (width >= 80rem) {
   .app {
     display: grid;
     grid-template:

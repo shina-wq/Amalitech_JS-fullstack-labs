@@ -77,11 +77,12 @@ export const createNote = (title, content, tags, location = null) => {
   return note;
 };
 
-export const updateNote = (id, { title, content, tags }) => {
+export const updateNote = (id, { title, content, tags, location }) => {
   const note = getNote(id);
   if (!note) return null;
   if (title !== undefined) note.title = title.trim();
   if (content !== undefined) note.content = content;
+  if (location !== undefined) note.location = location;
   if (tags !== undefined) {
     note.tags = [];
     tags.forEach((tag) => note.addTag(tag));

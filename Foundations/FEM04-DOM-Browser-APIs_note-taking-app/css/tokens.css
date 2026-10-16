@@ -23,25 +23,23 @@
   /* Theme: light (default) */
   --color-bg: var(--white);
   --color-bg-subtle: var(--neutral-100);
-  --color-bg-selected: var(--neutral-50);
   --color-border: var(--neutral-200);
   --color-border-strong: var(--neutral-300);
   --color-text: var(--neutral-950);
   --color-text-body: var(--neutral-800);
   --color-text-muted: var(--neutral-700);
-  --color-text-subtle: var(--neutral-500);
-  --color-placeholder: var(--neutral-400);
+  /* subtle/placeholder/focus are one step darker than the design for WCAG contrast */
+  --color-text-subtle: var(--neutral-600);
+  --color-placeholder: var(--neutral-500);
   --color-tag-bg: var(--neutral-200);
   --color-btn-secondary-bg: var(--neutral-100);
   --color-btn-secondary-text: var(--neutral-600);
-  --color-focus: var(--neutral-400);
+  --color-focus: var(--neutral-500);
   --color-accent: var(--blue-500);
   --color-accent-hover: var(--blue-700);
   --color-accent-subtle: var(--blue-50);
   --color-danger: var(--red-500);
-  --color-danger-subtle: var(--red-50);
   --color-success: var(--green-500);
-  --color-success-subtle: var(--green-50);
   --shadow-nav: 0 -4px 6px rgb(240 240 240 / 60%);
   --shadow-fab: 0 7px 11px rgb(202 207 216 / 70%);
   --shadow-toast: 0 16px 32px rgb(14 18 27 / 10%);
@@ -94,20 +92,18 @@
 :root.theme-dark {
   --color-bg: var(--neutral-950);
   --color-bg-subtle: var(--neutral-800);
-  --color-bg-selected: var(--neutral-800);
   --color-border: var(--neutral-800);
   --color-border-strong: var(--neutral-600);
   --color-text: var(--white);
   --color-text-body: var(--neutral-100);
   --color-text-muted: var(--neutral-300);
-  --color-text-subtle: var(--neutral-500);
+  --color-text-subtle: var(--neutral-400);
+  --color-placeholder: var(--neutral-400);
   --color-tag-bg: var(--neutral-700);
   --color-btn-secondary-bg: var(--neutral-800);
   --color-btn-secondary-text: var(--neutral-300);
   --color-focus: var(--neutral-500);
   --color-accent-subtle: var(--neutral-800);
-  --color-danger-subtle: var(--neutral-800);
-  --color-success-subtle: var(--neutral-800);
   --shadow-nav: 0 -4px 6px rgb(0 0 0 / 40%);
   --shadow-fab: 0 7px 11px rgb(0 0 0 / 40%);
   --shadow-toast: 0 16px 32px rgb(0 0 0 / 40%);

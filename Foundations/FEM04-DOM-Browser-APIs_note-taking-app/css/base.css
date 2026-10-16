@@ -55,6 +55,11 @@ body {
   outline-offset: 2px;
 }
 
+/* Programmatic focus targets (e.g. skip link destination) */
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

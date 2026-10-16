@@ -14,6 +14,8 @@
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
   <div class="app" data-view="all">
 
     <!-- Mobile/tablet top bar -->
@@ -65,7 +67,7 @@
       </button>
     </header>
 
-    <main class="main">
+    <main class="main" id="main" tabindex="-1">
 
       <!-- Notes list -->
       <section class="notes-panel" aria-label="Notes list">
@@ -121,12 +123,13 @@
               </span>
               <span class="meta-value">Archived</span>
             </div>
-            <div class="meta-row" id="location-row" hidden>
+            <div class="meta-row">
               <span class="meta-label">
                 <span class="icon icon-location" aria-hidden="true"></span>
                 Location
               </span>
               <span class="meta-value" id="note-location"></span>
+              <button type="button" class="text-btn" id="location-btn" data-action="add-location">Add location</button>
             </div>
             <div class="meta-row">
               <span class="meta-label">
@@ -305,7 +308,10 @@
       <button class="note-item" data-id="">
         <span class="note-item-title"></span>
         <span class="tag-chips"></span>
-        <time class="note-item-date"></time>
+        <span class="note-item-meta">
+          <time></time>
+          <span class="note-item-location"></span>
+        </span>
       </button>
     </li>
   </template>

@@ -2,13 +2,15 @@ import * as storage from './storage.js';
 import * as noteManager from './noteManager.js';
 import * as ui from './ui.js';
 import * as themes from './themes.js';
+import * as geo from './location.js';
 
 const $ = (id) => document.getElementById(id);
 const form = $('note-form');
 const titleInput = $('note-title');
 const searchInput = $('search-input');
+const noteDetail = $('note-detail');
 const dialog = $('confirm-dialog');
-const desktopQuery = matchMedia('(width >= 64rem)');
+const desktopQuery = matchMedia('(width >= 80rem)');
 const isDesktop = () => desktopQuery.matches;
 
 const state = {
@@ -17,6 +19,7 @@ const state = {
   query: '',
   selectedId: null,
   creating: false,
+  pendingLocation: null, // location fetched for the open editor, saved with the note
   settingsPanel: 'color',
 };
 
@@ -55,6 +58,7 @@ const showNotes = () => {
 
 const showEditor = () => {
   const note = noteManager.getNote(state.selectedId);
+  state.pendingLocation = null;
   if (state.creating) ui.renderEditor(null);
   else if (note) ui.renderEditor(note);
   else ui.hideEditor();
@@ -147,11 +151,16 @@ const saveNote = () => {
     return;
   }
   const { title, tags, content } = form.elements;
-  const data = { title: title.value, content: content.value, tags: noteManager.parseTags(tags.value) };
+  const data = {
+    title: title.value,
+    content: content.value,
+    tags: noteManager.parseTags(tags.value),
+    location: state.pendingLocation ?? undefined, // undefined keeps the saved location
+  };
 
   try {
     const note = state.creating
-      ? noteManager.createNote(data.title, data.content, data.tags)
+      ? noteManager.createNote(data.title, data.content, data.tags, data.location)
       : noteManager.updateNote(state.selectedId, data);
     storage.clearDraft();
     Object.assign(state, { selectedId: note.id, creating: false });
@@ -191,6 +200,23 @@ const runNoteAction = async (action) => {
   ui.showToast(...TOASTS[action]);
 };
 
+const addLocation = async () => {
+  const editorKey = () => (state.creating ? 'new' : state.selectedId);
+  const startedFor = editorKey();
+  ui.setLocationBusy(true);
+  try {
+    const location = await geo.getCurrentLocation();
+    // Ignore the result if the user opened another note meanwhile
+    if (editorKey() !== startedFor) return;
+    state.pendingLocation = location;
+    ui.setLocation(location);
+  } catch (error) {
+    ui.showToast(error.message, { isError: true });
+  } finally {
+    ui.setLocationBusy(false);
+  }
+};
+
 const restoreDraft = (draft) => {
   if (!draft) return;
   if (draft.id && !noteManager.getNote(draft.id)) {
@@ -226,6 +252,7 @@ const actions = {
   archive: () => runNoteAction('archive'),
   restore: () => runNoteAction('restore'),
   delete: () => runNoteAction('delete'),
+  'add-location': addLocation,
   'settings-back': () => {
     revertPreferences();
     ui.setDetailOpen(false);
@@ -294,7 +321,7 @@ const handleKeydown = (event) => {
   const { key, target } = event;
 
   // The dialog handles its own Escape; search inputs use Escape to clear
-  if (key === 'Escape' && !dialog.open && target !== searchInput && !$('note-detail').hidden) {
+  if (key === 'Escape' && !dialog.open && target !== searchInput && !noteDetail.hidden) {
     closeEditor();
   }
 
