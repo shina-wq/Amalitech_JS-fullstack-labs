@@ -2,6 +2,8 @@
 
 A note-taking web app built from the Frontend Mentor design with HTML, CSS and vanilla JavaScript (ES6 modules). It covers note CRUD, archiving, tags, search, themes, drafts and geolocation. Zero dependencies.
 
+**Live demo:** [note-taking-app-peach.vercel.app](https://note-taking-app-peach.vercel.app/)
+
 ## Getting Started
 ES modules don't load from `file://`, so serve the folder with any static server:
 ```bash
