@@ -70,10 +70,10 @@ export const formatCounts = (counts) => Object.entries(counts)
   .join('   ');
 
 export const formatReport = ({ overall, uniqueTags, generatedAt }) => {
-  const { total, completed, pending, overdue, completionRate, byStatus, byPriority } = overall;
+  const { total, completed, open, completionRate, byStatus, byPriority } = overall;
   return [
     heading('Overall Statistics'),
-    `Total tasks   ${colors.bold(total)}   (completed ${completed}, pending ${pending}, overdue ${overdue})`,
+    `Total tasks   ${colors.bold(total)}   (${completed} completed, ${open} open)`,
     `Completion    ${progressBar(completionRate)}`,
     `By status     ${formatCounts(byStatus)}`,
     `By priority   ${formatCounts(byPriority)}`,
@@ -98,24 +98,24 @@ export const formatUserRanking = (users) => {
 
 export const formatUser = (user) => {
   const { id, name, email, company, city, tasks } = user;
-  const counts = Object.fromEntries(['completed', 'pending', 'overdue', 'urgent']
-    .map((status) => [status, user.getTasksByStatus(status).length]));
+  const [completed, open, overdue, urgent] = ['completed', 'pending', 'overdue', 'urgent']
+    .map((status) => user.getTasksByStatus(status).length);
 
   return [
     heading(`${name} (#${id})`),
     `Email       ${email}`,
     `Company     ${company}`,
     `City        ${city}`,
-    `Tasks       ${tasks.length}   ${formatCounts(counts)}`,
+    `Tasks       ${tasks.length}   (${completed} completed, ${open} open — ${overdue} overdue, ${urgent} urgent)`,
     `Completion  ${progressBar(user.getCompletionRate())}`,
   ].join('\n');
 };
 
 export const formatGroups = (groups, userNames = new Map(), preview = 3) => [...groups]
   .map(([userId, tasks]) => {
-    const pending = tasks.filter(({ completed }) => !completed);
-    const lines = pending.slice(0, preview).map((task) => `   ${formatStatus(task.getStatus(), 11)}  ${truncate(task.title, 50)}`);
-    const more = pending.length > preview ? [colors.dim(`   …and ${pending.length - preview} more pending`)] : [];
-    return [`${colors.bold(userNames.get(userId) ?? `User #${userId}`)} — ${tasks.length} tasks, ${pending.length} pending`, ...lines, ...more].join('\n');
+    const open = tasks.filter(({ completed }) => !completed);
+    const lines = open.slice(0, preview).map((task) => `   ${formatStatus(task.getStatus(), 11)}  ${truncate(task.title, 50)}`);
+    const more = open.length > preview ? [colors.dim(`   …and ${open.length - preview} more open`)] : [];
+    return [`${colors.bold(userNames.get(userId) ?? `User #${userId}`)} — ${tasks.length} tasks, ${open.length} open`, ...lines, ...more].join('\n');
   })
   .join('\n\n');

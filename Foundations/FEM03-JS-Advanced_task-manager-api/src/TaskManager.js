@@ -35,15 +35,23 @@ export class TaskManager {
 
   /**
    * Loads data from the API (cached + retried by APIClient).
-   * Falls back to the last saved snapshot when the API is unreachable.
+   * Keeps partial results when one endpoint fails, and falls back to
+   * the last saved snapshot when the API is unreachable.
    */
   async load() {
     let data;
     let source = 'api';
 
     try {
-      data = await this.#api.fetchAll();
-      await this.#saveSnapshot(data);
+      const { errors, ...result } = await this.#api.fetchAllSettled();
+      data = result;
+
+      if (errors.length) {
+        errors.forEach(({ message }) => logger.warn(`${message} — continuing with partial data`));
+        source = 'partial'; // don't overwrite a complete snapshot with partial data
+      } else {
+        await this.#saveSnapshot(data);
+      }
     } catch (apiError) {
       logger.warn(`${apiError.message} — trying offline snapshot`);
       data = await this.#readSnapshot().catch(() => {

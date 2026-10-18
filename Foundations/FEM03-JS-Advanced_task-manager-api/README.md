@@ -5,8 +5,7 @@ An ES6+ JavaScript client that fetches, processes and manages tasks from the [JS
 ## Getting Started
 Requires Node.js 20+.
 ```bash
-npm start   # interactive CLI
-npm test    # unit tests (no network needed)
+npm start
 ```
 Set `DEBUG=1` to log requests, retries and cache hits.
 
@@ -32,10 +31,12 @@ src/
 └── main.js           # entry point
 ```
 
+`main.js` stays a thin entry point. The `TaskManager` controller (a bonus challenge) is the module that imports `APIClient`, the models and `* as processor` and connects them, so `main.js` only creates the manager, loads the data and starts the CLI.
+
 **Derived data:** JSONPlaceholder todos only have `id`, `userId`, `title` and `completed`. `priority`, `dueDate` and `tags` are derived deterministically from the ids. Toggles are local only, because the API doesn't persist writes.
 
 ## Error Handling
-- **Layered fallbacks:** retry with backoff → cached data → on-disk snapshot (`.cache/`) → clear error and exit code `1`
+- **Layered fallbacks:** retry with backoff → cached data → partial data if only one endpoint fails → on-disk snapshot (`.cache/`) → clear error and exit code `1`
 - **Typed errors:** `APIError` distinguishes `network`, `timeout`, `http` and `parse` failures. Only transient ones are retried.
 - **Bad data:** malformed records are skipped and logged. Empty responses, orphaned tasks and corrupt snapshots are handled.
 - **Bad input:** invalid options, IDs, statuses or sort keys show a message and return to the menu.
@@ -44,7 +45,7 @@ src/
 | Feature | Example |
 |---|---|
 | Classes, inheritance, private fields | `PriorityTask extends Task` overrides `getStatus()` via `super`; `#request()` |
-| Async | `async/await` fetches, `.then()` chain + `Promise.all` in `fetchAll()` |
+| Async | `async/await` fetches; `.then()` chains with `Promise.all` in `fetchAll()` and `Promise.allSettled` in `fetchAllSettled()` |
 | Destructuring | `const { id, title, completed, userId } = raw`; `({ priority }) =>` |
 | Spread / rest | `{ ...task, ...derived }`, `[...tasks].sort()` / `addTask(...tasks)`, `sortTasks(tasks, ...criteria)` |
 | Optional chaining | `company?.name`, `dueDate?.toISOString() ?? '—'` |

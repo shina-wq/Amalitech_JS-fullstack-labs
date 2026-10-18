@@ -44,7 +44,7 @@ export const calculateStatistics = (tasks = []) => {
   return {
     total,
     completed,
-    pending: total - completed,
+    open: total - completed,
     overdue: byStatus.overdue ?? 0,
     completionRate: percentage(completed, total),
     byStatus,

@@ -55,6 +55,16 @@ export class APIClient {
       .then(([users, todos]) => ({ users, todos }));
   }
 
+  // Promise-chain style with partial results: one failed resource doesn't discard the other
+  fetchAllSettled() {
+    return Promise.allSettled([this.fetchUsers(), this.fetchTodos()])
+      .then(([users, todos]) => {
+        const errors = [users, todos].filter(({ status }) => status === 'rejected').map(({ reason }) => reason);
+        if (errors.length === 2) throw errors[0];
+        return { users: users.value ?? [], todos: todos.value ?? [], errors };
+      });
+  }
+
   // Rest parameter: fetch todos for any number of users concurrently
   async fetchTodosForUsers(...userIds) {
     const results = await Promise.all(userIds.map((id) => this.fetchUserTodos(id)));
