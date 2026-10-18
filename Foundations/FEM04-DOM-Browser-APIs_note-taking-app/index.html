@@ -11,6 +11,18 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/layout.css">
+  <script>
+    // Apply saved theme/font before first paint (main.js runs after parsing, which would flash light)
+    try {
+      const { theme = 'system', font } = JSON.parse(localStorage.getItem('note-app.prefs')) ?? {};
+      const root = document.documentElement;
+      root.classList.toggle('theme-dark', theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches));
+      root.classList.toggle('font-serif', font === 'serif');
+      root.classList.toggle('font-mono', font === 'mono');
+    } catch {
+      // Storage unavailable: main.js falls back to defaults
+    }
+  </script>
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
@@ -105,7 +117,7 @@
           <div class="field">
             <label for="note-title" class="visually-hidden">Title</label>
             <input type="text" id="note-title" class="note-title-input" name="title" placeholder="Enter a title…" required aria-describedby="title-error">
-            <p class="field-error" id="title-error" hidden></p>
+            <p class="field-error" id="title-error" role="alert" hidden></p>
           </div>
 
           <div class="note-meta">

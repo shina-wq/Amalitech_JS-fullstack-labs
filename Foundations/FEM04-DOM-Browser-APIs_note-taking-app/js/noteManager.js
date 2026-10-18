@@ -1,5 +1,7 @@
 import * as storage from './storage.js';
 
+const sameTag = (a, b) => a.toLowerCase() === b.toLowerCase();
+
 export class Note {
   constructor(title, content = '', tags = []) {
     this.id = crypto.randomUUID();
@@ -28,7 +30,7 @@ export class Note {
   // Ignores blanks and case-insensitive duplicates
   addTag(tag) {
     const name = tag.trim();
-    const exists = this.tags.some((t) => t.toLowerCase() === name.toLowerCase());
+    const exists = this.tags.some((t) => sameTag(t, name));
     if (name && !exists) this.tags.push(name);
   }
 }
@@ -37,10 +39,15 @@ let notes = [];
 
 const byNewest = (a, b) => b.timestamp.localeCompare(a.timestamp);
 
-const persist = () => {
+// Runs a change and saves it; if saving fails the change is undone so memory matches storage
+const commit = (change) => {
+  const backup = structuredClone(notes);
+  const result = change();
   if (!storage.saveNotes(notes)) {
+    notes = backup.map(Note.from);
     throw new Error('Storage is full. Delete some notes and try again.');
   }
+  return result;
 };
 
 // Load saved notes, or seed with sample notes on the first visit
@@ -66,46 +73,48 @@ export const parseTags = (text) => text.split(',');
 export const getNotes = ({ archived = false } = {}) =>
   notes.filter((note) => note.archived === archived).sort(byNewest);
 
-export const getAllTags = () =>
-  [...new Set(notes.flatMap((note) => note.tags))].sort((a, b) => a.localeCompare(b));
-
-export const createNote = (title, content, tags, location = null) => {
-  const note = new Note(title, content, tags);
-  note.location = location;
-  notes.push(note);
-  persist();
-  return note;
+// One entry per tag regardless of case ("dev" and "Dev" are the same tag)
+export const getAllTags = () => {
+  const tags = new Map();
+  notes.flatMap((note) => note.tags).forEach((tag) => {
+    if (!tags.has(tag.toLowerCase())) tags.set(tag.toLowerCase(), tag);
+  });
+  return [...tags.values()].sort((a, b) => a.localeCompare(b));
 };
+
+export const createNote = (title, content, tags, location = null) =>
+  commit(() => {
+    const note = new Note(title, content, tags);
+    note.location = location;
+    notes.push(note);
+    return note;
+  });
 
 export const updateNote = (id, { title, content, tags, location }) => {
-  const note = getNote(id);
-  if (!note) return null;
-  if (title !== undefined) note.title = title.trim();
-  if (content !== undefined) note.content = content;
-  if (location !== undefined) note.location = location;
-  if (tags !== undefined) {
-    note.tags = [];
-    tags.forEach((tag) => note.addTag(tag));
-  }
-  note.timestamp = new Date().toISOString();
-  persist();
-  return note;
+  // e.g. deleted in another tab
+  if (!getNote(id)) throw new Error('This note no longer exists.');
+  return commit(() => {
+    const note = getNote(id);
+    if (title !== undefined) note.title = title.trim();
+    if (content !== undefined) note.content = content;
+    if (location !== undefined) note.location = location;
+    if (tags !== undefined) {
+      note.tags = [];
+      tags.forEach((tag) => note.addTag(tag));
+    }
+    note.timestamp = new Date().toISOString();
+    return note;
+  });
 };
 
-export const archiveNote = (id) => {
-  getNote(id)?.archive();
-  persist();
-};
+export const archiveNote = (id) => commit(() => getNote(id)?.archive());
 
-export const restoreNote = (id) => {
-  getNote(id)?.restore();
-  persist();
-};
+export const restoreNote = (id) => commit(() => getNote(id)?.restore());
 
-export const deleteNote = (id) => {
-  notes = notes.filter((note) => note.id !== id);
-  persist();
-};
+export const deleteNote = (id) =>
+  commit(() => {
+    notes = notes.filter((note) => note.id !== id);
+  });
 
 // Search and tag filters cover archived notes too, as in the design
 export const searchNotes = (query) => {
@@ -115,4 +124,5 @@ export const searchNotes = (query) => {
     .sort(byNewest);
 };
 
-export const filterByTag = (tag) => notes.filter((note) => note.tags.includes(tag)).sort(byNewest);
+export const filterByTag = (tag) =>
+  notes.filter((note) => note.tags.some((t) => sameTag(t, tag))).sort(byNewest);

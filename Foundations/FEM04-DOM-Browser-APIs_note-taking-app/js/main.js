@@ -98,12 +98,22 @@ const navigate = (view, { tag = '' } = {}) => {
   showEditor();
 };
 
+// Unsaved edits live in the draft; ask before throwing them away
+const confirmLeave = async () => !storage.loadDraft() || ui.confirmAction('discard');
+
 const openSettingsPanel = (name) => {
   state.settingsPanel = name;
   revertPreferences();
   ui.showSettingsPanel(name);
   ui.setDetailOpen(true);
   document.querySelector(`[data-setting-panel="${name}"] :checked`)?.focus();
+};
+
+// Back / Escape: drop the unsaved preview and return to the settings menu
+const closeSettingsPanel = () => {
+  revertPreferences();
+  ui.setDetailOpen(false);
+  if (!isDesktop()) document.querySelector('[data-setting][aria-current]')?.focus();
 };
 
 // Notes
@@ -253,17 +263,18 @@ const actions = {
   restore: () => runNoteAction('restore'),
   delete: () => runNoteAction('delete'),
   'add-location': addLocation,
-  'settings-back': () => {
-    revertPreferences();
-    ui.setDetailOpen(false);
-  },
+  'settings-back': closeSettingsPanel,
   'dismiss-toast': (button) => button.closest('.toast').remove(),
 };
 
-const handleClick = (event) => {
+const handleClick = async (event) => {
   const button = event.target.closest('button');
   if (!button) return;
   const { id, tag, view, setting, action } = button.dataset;
+
+  // These all replace the open editor
+  const leavesEditor = id || tag || view || action === 'create';
+  if (leavesEditor && !(await confirmLeave())) return;
 
   if (id) openNote(id);
   else if (tag) navigate('tag', { tag });
@@ -321,8 +332,9 @@ const handleKeydown = (event) => {
   const { key, target } = event;
 
   // The dialog handles its own Escape; search inputs use Escape to clear
-  if (key === 'Escape' && !dialog.open && target !== searchInput && !noteDetail.hidden) {
-    closeEditor();
+  if (key === 'Escape' && !dialog.open && target !== searchInput) {
+    if (state.view === 'settings') closeSettingsPanel();
+    else if (!noteDetail.hidden) closeEditor();
   }
 
   if ((key === 'ArrowDown' || key === 'ArrowUp') && target.matches('.note-item')) {

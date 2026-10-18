@@ -58,6 +58,12 @@ const CONFIRM = {
     icon: 'archive',
     button: 'btn-primary',
   },
+  discard: {
+    title: 'Discard Changes',
+    message: 'You have unsaved changes. Are you sure you want to leave this note? Your changes will be lost.',
+    icon: 'info',
+    button: 'btn-danger',
+  },
 };
 
 const TOAST_DURATION = 4000;
@@ -123,6 +129,7 @@ export const setView = (view, { tag = '', query = '' } = {}) => {
     setCurrent(link, link.dataset.view === navView));
 };
 
+// Part of the brief's ui API; main.js navigates through setView, which covers every view
 export const toggleArchiveView = (showArchived) => setView(showArchived ? 'archived' : 'all');
 
 // Mobile/tablet: show a note or settings panel instead of the list
@@ -166,7 +173,7 @@ export const updateTagList = (tags, activeTag = '') => {
     const button = item.querySelector('[data-tag]');
     button.dataset.tag = tag;
     button.querySelector('.tag-name').textContent = tag;
-    setCurrent(button, tag === activeTag);
+    setCurrent(button, tag.toLowerCase() === activeTag.toLowerCase());
     return item;
   }));
 };
@@ -248,7 +255,16 @@ export const showToast = (message, { linkText = '', linkView = '', isError = fal
     link.hidden = false;
   }
   els.toasts.append(toast);
-  setTimeout(() => toast.remove(), TOAST_DURATION);
+
+  // Toasts with a link stay longer, and none close while hovered or focused
+  const duration = linkText ? TOAST_DURATION * 2 : TOAST_DURATION;
+  let timer;
+  const scheduleRemoval = () => {
+    clearTimeout(timer);
+    if (!toast.matches(':hover, :focus-within')) timer = setTimeout(() => toast.remove(), duration);
+  };
+  ['mouseenter', 'mouseleave', 'focusin', 'focusout'].forEach((type) => toast.addEventListener(type, scheduleRemoval));
+  scheduleRemoval();
 };
 
 // Resolves true when the user confirms; Escape or Cancel resolves false
