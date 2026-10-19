@@ -2,6 +2,10 @@
 
 An ES6+ JavaScript client that fetches, processes and manages tasks from the [JSONPlaceholder](https://jsonplaceholder.typicode.com) API through an interactive CLI. Zero dependencies.
 
+## Screenshots
+![Task list](docs/screenshots/task-list.png)
+![Statistics](docs/screenshots/statistics.png)
+
 ## Getting Started
 Requires Node.js 20+.
 ```bash
