@@ -1,4 +1,3 @@
-// Minimal leveled logger; debug output is enabled with the DEBUG env variable
 const debugEnabled = Boolean(process.env.DEBUG);
 
 export const logger = {

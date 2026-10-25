@@ -1,11 +1,8 @@
 import { logger } from './logger.js';
 
-/**
- * Wraps an async function with a closure-scoped cache.
- * - Fresh hits are returned without calling `fn`
- * - Concurrent calls with the same arguments share one in-flight promise
- * - On failure, the last known (stale) value is returned when available
- */
+// Fresh hit "I already have a recent answer"
+// De-duplication "Someone else is already fetching this right now"
+// Stale fallback "The fetch failed, but I have an old answer"
 export const withCache = (fn, { ttl = 60_000 } = {}) => {
   const store = new Map(); // key -> { value, expires }
   const pending = new Map(); // key -> in-flight promise

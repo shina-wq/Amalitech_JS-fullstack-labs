@@ -5,6 +5,11 @@ import { logger } from './logger.js';
 const BASE_URL = 'https://jsonplaceholder.typicode.com';
 
 export class APIError extends Error {
+  // The error types:
+  // network: couldn't reach server (wifi off, dns failure)
+  // timeout: server took too long (within 8 seconds)
+  // http: server replied but with an error status (404 not found, 500 server error)
+  // parse: reply wasn't usable (broken JSON, unexpected data type)
   /** @param {'network'|'timeout'|'http'|'parse'} type */
   constructor(message, { type, endpoint, status = null, cause } = {}) {
     super(message, { cause });
@@ -16,15 +21,16 @@ export class APIError extends Error {
 
   get isRetryable() {
     return ['network', 'timeout'].includes(this.type) || this.status === 429 || this.status >= 500;
+    // network dropped or server was slow, too many requests, server side error
   }
 }
 
 export class APIClient {
-  #baseURL;
-  #timeout;
-  #retries;
-  #limit;
-  #get;
+  #baseURL; // API address
+  #timeout; // How many ms to wait before giving up on a request
+  #retries; // How many extra attempts after a failure
+  #limit;  // The rate-limiter function from createRateLimiter
+  #get; // cached version of #request from withCache
 
   constructor({ baseURL = BASE_URL, timeout = 5000, retries = 2, rateLimit = 100, cacheTTL = 60_000 } = {}) {
     this.#baseURL = baseURL;
