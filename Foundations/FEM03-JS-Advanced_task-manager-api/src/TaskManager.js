@@ -8,6 +8,7 @@ import { logger } from './logger.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 
+// custom error for when the application cannot retrieve data from the API and cannot use a saved snapshot
 export class DataUnavailableError extends Error {
   constructor(cause) {
     super(`Unable to load task data (${cause.message}). Check your internet connection and try again.`, { cause });

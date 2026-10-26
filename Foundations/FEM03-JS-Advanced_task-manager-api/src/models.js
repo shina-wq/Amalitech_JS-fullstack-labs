@@ -2,7 +2,7 @@ export const PRIORITIES = ['low', 'medium', 'high'];
 export const STATUSES = ['pending', 'completed', 'overdue', 'urgent'];
 export const TAGS = ['work', 'personal', 'home', 'health', 'finance', 'learning'];
 
-const DAY_MS = 24 * 60 * 60 * 1000;
+const DAY_MS = 24 * 60 * 60 * 1000; // 86,400,000 milliseconds in a day
 const URGENT_WINDOW_DAYS = 3;
 
 const invalid = (kind, raw) => new TypeError(`Malformed ${kind}: ${JSON.stringify(raw)}`);
